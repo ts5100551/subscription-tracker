@@ -7,6 +7,8 @@ export type SubscriptionRow = Subscription & {
 
 type SubscriptionTableProps = {
   rows: SubscriptionRow[];
+  onEdit?: (row: SubscriptionRow) => void;
+  onDelete?: (row: SubscriptionRow) => void;
 };
 
 const statusClass = (status: Subscription["status"]) => {
@@ -22,7 +24,7 @@ const statusClass = (status: Subscription["status"]) => {
   }
 };
 
-const SubscriptionTable = ({ rows }: SubscriptionTableProps) => {
+const SubscriptionTable = ({ rows, onEdit, onDelete }: SubscriptionTableProps) => {
   return (
     <div className="table-wrapper">
       <table className="subscription-table">
@@ -34,6 +36,7 @@ const SubscriptionTable = ({ rows }: SubscriptionTableProps) => {
             <th>Next Billing</th>
             <th>Price</th>
             <th>Status</th>
+            {(onEdit || onDelete) && <th className="table-actions-col">Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -56,6 +59,34 @@ const SubscriptionTable = ({ rows }: SubscriptionTableProps) => {
                   {row.status}
                 </span>
               </td>
+              {(onEdit || onDelete) && (
+                <td data-label="Actions" className="table-actions-cell">
+                  <div className="row-actions">
+                    {onEdit && (
+                      <button
+                        type="button"
+                        className="row-action-btn row-action-edit"
+                        onClick={() => onEdit(row)}
+                        aria-label={`Edit ${row.name}`}
+                        title="Edit"
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {onDelete && (
+                      <button
+                        type="button"
+                        className="row-action-btn row-action-delete"
+                        onClick={() => onDelete(row)}
+                        aria-label={`Delete ${row.name}`}
+                        title="Delete"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

@@ -13,14 +13,15 @@ export type RenewalItem = {
 
 type RenewalListProps = {
   items: RenewalItem[];
+  emptyMessage?: string;
 };
 
-const RenewalList = ({ items }: RenewalListProps) => {
+const RenewalList = ({ items, emptyMessage = "No renewals in this period." }: RenewalListProps) => {
   if (items.length === 0) {
     return (
       <div className="empty-state">
         <strong>All clear</strong>
-        <p>No renewals in the next 5 days.</p>
+        <p>{emptyMessage}</p>
       </div>
     );
   }

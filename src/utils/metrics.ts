@@ -38,17 +38,17 @@ export const buildCategoryTotals = (subscriptions: Subscription[]) => {
     .sort((a, b) => b.value - a.value);
 };
 
-export const buildTrendData = (monthlySpend: number) => {
+export const buildTrendData = (monthlySpend: number, count = 6) => {
   const now = new Date();
-  const months = Array.from({ length: 6 }, (_, idx) => {
-    const date = new Date(now.getFullYear(), now.getMonth() - (5 - idx), 1);
+  const months = Array.from({ length: count }, (_, idx) => {
+    const date = new Date(now.getFullYear(), now.getMonth() - (count - 1 - idx), 1);
     return new Intl.DateTimeFormat("en-US", { month: "short" }).format(date);
   });
 
-  return months.map((label, index) => ({
-    label,
-    value: Math.round(monthlySpend * (trendSeed[index] ?? 1)),
-  }));
+  return months.map((label, index) => {
+    const seed = trendSeed[index % trendSeed.length] ?? 1;
+    return { label, value: Math.round(monthlySpend * seed) };
+  });
 };
 
 export const buildStatusTotals = (subscriptions: Subscription[]) => {
